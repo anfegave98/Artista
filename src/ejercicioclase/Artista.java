@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author anfeg
@@ -54,67 +55,72 @@ public class Artista {
     public void setGenero(String genero) {
         this.genero = genero;
     }
+
     public static List<Artista> findAll() throws SQLException {
-		List<Artista> artistas= null;
-	    String query = "SELECT * FROM artista";
-	    Connection connection = Conexion.getConnection();
-	    try {
-	    Statement st = connection.createStatement();
-	    ResultSet rs = st.executeQuery(query);
-	    int id =0;
-	    String nombre = null;
+        List<Artista> artistas = null;
+        String query = "SELECT * FROM artista";
+        Connection connection = Conexion.getConnection();
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            int id = 0;
+            String nombre = null;
             String genero = null;
-	
-	    while (rs.next()){
-	    	if(artistas == null){
-	    		artistas= new ArrayList<Artista>();
-	    	}
-	      
-	        Artista registro= new Artista(id,nombre,genero);
-	        id = rs.getInt("id");
-	        registro.setId(id);
-	        
-	        nombre = rs.getString("nombre");
-	        registro.setNombre(nombre) ;
-                
-                genero = rs.getString("genero");
-	        registro.setGenero(genero) ;
-	        
-	        artistas.add(registro);
-                for(int i=0;i<artistas.size();i++){
-                    System.out.println(artistas.get(i).getId()+" "+artistas.get(i).getNombre()+ " " +artistas.get(i).getGenero());
+
+            while (rs.next()) {
+                if (artistas == null) {
+                    artistas = new ArrayList<Artista>();
                 }
-	    }
-	    st.close();
-	    
-	    } catch (SQLException e) {
-			System.out.println("Problemas al obtener la lista de Artitas");
-			e.printStackTrace();
-		}
-	    
-	    return artistas;
-	}
+
+                Artista registro = new Artista(id, nombre, genero);
+                id = rs.getInt("id");
+                registro.setId(id);
+
+                nombre = rs.getString("nombre");
+                registro.setNombre(nombre);
+
+                genero = rs.getString("genero");
+                registro.setGenero(genero);
+
+                artistas.add(registro);
+            }
+
+            for (int i = 0; i < artistas.size(); i++) {
+                System.out.println(artistas.get(i).getId() + " " + artistas.get(i).getNombre() + " " + artistas.get(i).getGenero());
+            }
+            st.close();
+
+        } catch (SQLException e) {
+            System.out.println("Problemas al obtener la lista de Artitas");
+            e.printStackTrace();
+        }
+
+        return artistas;
+    }
+
     public static boolean insert(Artista t) throws SQLException {
-		boolean result=false;
-		Connection connection = Conexion.getConnection();
-                String query = "insert into artista (artista.id,artista.nombre,artista.genero) values ("+t.getId()+",'"+t.getNombre()+"','"+t.getGenero()+"');";
-                PreparedStatement preparedStmt=null;
-                try {
-			preparedStmt = connection.prepareStatement(query);
-			preparedStmt.setInt (1, t.getId());
-                        preparedStmt.setString (2, t.getNombre());
-                        preparedStmt.setString (3, t.getGenero());
-			result= preparedStmt.execute();
-                } catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+        boolean result = false;
+        Connection connection = Conexion.getConnection();
+        String query = "insert into artista (id,nombre,genero) values (?,?,?)";
+        PreparedStatement preparedStmt = null;
+        try {
+            preparedStmt = connection.prepareStatement(query);
+            preparedStmt.setInt(1, t.getId());
+            preparedStmt.setString(2, t.getNombre());
+            preparedStmt.setString(3, t.getGenero());
+            result = preparedStmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public static void main(String[] args) throws SQLException {
-        Artista x = new Artista(4,"Gibran","Rock");
+        Artista x = new Artista(7, "Gibran", "Rock");
+
         insert(x);
         findAll();
-      
+
     }
-    
+
 }
