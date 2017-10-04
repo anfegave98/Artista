@@ -21,7 +21,7 @@ public class Conexion {
 			   }
 
 			  try {
-			    CONEXION = DriverManager.getConnection("jdbc:mysql://localhost:3306/BaseDatos","root", "root");
+			    CONEXION = DriverManager.getConnection("jdbc:mysql://localhost:3306/BaseDatos","root", "");
      			  } catch (SQLException e) {
 			     throw new SQLException(e);
 			  }
